@@ -1,0 +1,50 @@
+[Unit]
+Description=gunicorn service
+After=network.target
+   
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/git/thermocloud-portal-main/
+ExecStart=/home/git/v1_env/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/git/thermocloud-portal-main/awesome.sock core.wsgi:application
+   
+[Install]
+WantedBy=multi-user.target
+
+
+
+server {
+       listen 80;
+       server_name beta.thermocloud.net;
+       location = /favicon.ico {access_log off;log_not_found off;}
+
+       location /static/ {
+         root /home/git/thermocloud-portal-main/core;
+       }
+       location /media/ {
+         root /home/git/thermocloud-portal-main/core;
+       }
+
+       location / {
+         include proxy_params;
+         proxy_pass http://unix://home/git/thermocloud-portal-main/awesome.sock;
+       }
+     }
+
+
+
+
+Root Password For App: admin@admin P:devpassobed
+
+Db name and Password
+DB_ENGINE=mysql
+DB_HOST=localhost
+DB_NAME=awesome
+DB_USERNAME=dev
+DB_PASS=secret
+DB_PORT=3306
+
+
+
+<script src="https://gist.github.com/Suhas-G/16f91a6be5df6c8e05412b6776611eb9.js"></script>
+https://gist.github.com/Suhas-G/16f91a6be5df6c8e05412b6776611eb9

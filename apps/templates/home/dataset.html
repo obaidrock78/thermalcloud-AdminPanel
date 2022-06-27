@@ -1,0 +1,3 @@
+jsondata = [{% for i in sensor_data %}
+("timestamp"="{{ i.timestamp }}", "temperature"="{{ i.temperature_f }}", "datetime"="{{ i.created }}", "date"="{{ i.date }}", "time"="{{ i.time }}"),{% endfor %}
+]

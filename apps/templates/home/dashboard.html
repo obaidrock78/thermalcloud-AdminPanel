@@ -1,0 +1,87 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <!-- [ breadcrumb ] start -->
+            <div class="page-header">
+                <div class="page-block">
+                    <div class="row align-items-center">
+                        <div class="col-md-12">
+                            <div class="page-header-title">
+                                <h5 class="m-b-10">Dashboard</h5>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [ breadcrumb ] end -->
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <!-- [ Main Content ] start -->
+                    <div class="row">
+                        <!--[ Recent Users ] start-->
+                        <div class="col-xl-8 col-md-6">
+                            <div class="card Recent-Users">
+                                <div class="card-header">
+                                    <h5>Current Sensor Status</h5>
+                                </div>
+                                <div class="card-block px-0 py-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Sensor Name</th>
+                                                        <th>Temperature</th>
+                                                        <th>Humidity</th>
+                                                        <th>Last Reading</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                            {% for i in sensor_list %}
+                                                <tr class="unread">
+                                                    <td><i class="feather icon-thermometer f-30 text-c-grey"alt="sensor"></td>
+                                                    <td>
+                                                        <h6 class="mb-1">{{ i.sensor.name }}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="text-muted" title="{{ i.sensor.last_temperature_c }} &#8451;" data-toggle="tooltip"><i class="fas fa-circle text-c-{{ i.sensor.temperature_status_color }} f-10 m-r-10"></i>{{ i.sensor.last_temperature_f }} &#8457;</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="text-muted"><i class="fas fa-circle text-c-{{ i.sensor.last_humidity_status_color }} f-10 m-r-10"></i>{{ i.sensor.last_humidity }}%</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="text-muted">{{ i.sensor.last_updated }}</h6>
+                                                    </td>
+                                                    <td><a href="/sensor_overview?uuid={{ i.sensor.uuid }}" class="label theme-bg text-white f-12">Sensor Details</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--[ Recent Users ] end-->
+                    </div>
+                    <!-- [ Main Content ] end -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

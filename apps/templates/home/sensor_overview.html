@@ -1,0 +1,208 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Sensor Overview {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<!--Chart js-->
+<link rel="stylesheet" type="text/css" href="static/assets/css/graph_style.css" />
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Sensor Overview</h5>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- [ breadcrumb ] end -->
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- [ Main Content ] start -->
+                <div class="row">
+                    <!-- [ Chart ] start -->
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Sensor Details</h5>
+                            </div>
+                            <div class="card-block">
+                                <h5 class="mb-1"><b>{{ sensor_info.name }}</b> is currently <b>{{ sensor_info.last_temperature_f }} &#8457;</b> with a humidity of <b>{{ sensor_info.last_humidity }}%</b>. The latest reading is from <b>{{ sensor_info.last_updated }}</b></h5>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Sensor History ({{ sensor_info.timespan }} days)</h5>
+                                <a href="/sensor_overview?uuid={{ sensor_info.uuid }}&timespan=7">
+                                    <button type="button" class="btn btn-primary">Past Week</button>
+                                </a>
+                                <a href="/sensor_overview?uuid={{ sensor_info.uuid }}&timespan=14">
+                                    <button type="button" class="btn btn-primary">Past 2 Weeks</button>
+                                </a>
+                                <a href="/sensor_overview?uuid={{ sensor_info.uuid }}&timespan=30">
+                                    <button type="button" class="btn btn-primary">Past Month</button>
+                                </a>
+                                <a href="/sensor_overview?uuid={{ sensor_info.uuid }}&timespan=90">
+                                    <button type="button" class="btn btn-primary">Past 3 Months</button>
+                                </a>
+                                <a href="/sensor_overview?uuid={{ sensor_info.uuid }}&timespan=180">
+                                    <button type="button" class="btn btn-primary">Past 6 Months</button>
+                                </a>
+                                <a href="/sensor_overview?uuid={{ sensor_info.uuid }}&timespan=365">
+                                    <button type="button" class="btn btn-primary">Past Year</button>
+                                </a>
+                                
+                            <div class="card-block">
+                                <canvas id="canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ Chart ] end -->
+                </div>
+                <!-- [ Main Content ] end -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"
+></script>
+
+<script>
+    const longLabels = {{ sensor_time_data | safe }};
+  
+    const Ylabels = {{ sensor_temperature_data }};
+
+    const labelsAdjusted = longLabels.map((label) => label.split(" "));
+    //Graph 01
+    window.onload = function() {
+        var ctx = document.getElementById("canvas").getContext("2d");
+        var myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labelsAdjusted,
+                datasets: [
+                    {
+                    label: "Temperature",
+                    data: Ylabels,
+                    backgroundColor: "#b3e2eb",
+                    borderColor: "#0046FE",
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    radius: 0,
+                    hoverRadius: 7,
+                    },
+                ],
+            },
+            options: {
+                plugins: {
+                    legend: {
+                    // labels: {
+                    //   boxWidth: 0,
+                    // },
+                    },
+            
+                    tooltip: {
+                    titleColor: "#000",
+                    titleAlign: 'center' ,
+                    titleSpacing: 0 ,
+                    titleFont: {
+                        size: 12
+                    },
+            
+                    
+            
+                    backgroundColor: '#b3e2eb',
+                    borderWidth: 3,
+                    padding: 10,
+                    cornerRadius: 10,
+                    borderColor: "#0046FE",
+            
+            
+                    bodyColor: "#000" ,
+                    bodyAlign: 'center',
+                    bodyFont: {
+                        size: 20,
+                        weight: 'bold',
+                    },
+            
+                    displayColors: false,
+                    
+                    callbacks: {
+                        title: (context) => {
+                        
+                        return context[0].label.replaceAll(',', ' ');
+                        },
+            
+                        beforeTitle: function(context){
+                        return "Graph"
+                        },
+            
+                        // label: function(tooltipItems, data) { 
+                        //   console.log(tooltipItems);
+                        //   console.log(tooltipItems.dataset.label);
+                        //   // console.log(tooltipItems.dataset.data.map((value) => value))
+                        
+                        //   return tooltipItems + '°C';
+                        // }
+                    },
+                },
+                animation: false
+            },
+        
+            
+            hover: {
+                mode: "index",
+                intersect: false,
+            },
+            maintainAspectRatio: false,
+            elements: {},
+            scales: {
+                x: {
+                ticks: {
+                    maxTicksLimit: 10,
+                    font: {
+                    size: 9,
+                    },
+                },
+                display: true,
+                grid: {
+                    display: false,
+                },
+                },
+                y: {
+                display: true,
+        //          beginAtZero: true,
+                suggestedMin: 32,
+                grid: {
+                    display: false,
+                },
+                },
+            },
+            },
+        });
+    };
+</script>
+
+  <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock javascripts %}

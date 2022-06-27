@@ -1,0 +1,70 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Sensor Registration {% endblock %}
+
+{% block content %}   
+
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Sensor Registration</h5>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="auth-content">
+            <div class="auth-bg">
+                <span class="r"></span>
+                <span class="r s"></span>
+                <span class="r s"></span>
+                <span class="r"></span>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-4">Register a sensor</h3>
+
+                    <span class="mb-0 text-muted">
+                        {% if msg %}
+                            {{ msg | safe }}
+                            <br>
+                            <br>
+                        {% endif %} 
+                    </span>
+
+                    <!-- Hide the form on success -->
+                    <form role="form" method="post" action="">
+
+                        {% csrf_token %}     
+
+                        <div class="input-group mb-2">
+                            {{ form.mac }}
+                        </div>
+                        <span class="text-error">{{ form.mac.errors }}</span>
+
+                        <div class="input-group mb-2">
+                            {{ form.name }}
+                        </div>
+                        <span class="text-error">{{ form.name.errors }}</span>
+
+                        <br>
+                        <button type="submit" name="register_sensor" class="btn btn-primary shadow-2 mb-4">Register</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+                    
+    <p class="mb-2 text-muted">
+        Copyright &copy; 2022 Thermocloud</a> 
+    </p>
+</div>
+
+{% endblock content %}
